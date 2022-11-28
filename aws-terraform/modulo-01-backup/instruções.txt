@@ -1,0 +1,4 @@
+
+Converter keypair aws para chave pública
+# chmod 400 arquivo.pem
+# ssh-keygen -y -f arquivo.pem > arquivo-public-key.pub

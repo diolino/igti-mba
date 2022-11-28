@@ -1,0 +1,28 @@
+version: 0.2 
+ 
+phases: 
+  pre_build: 
+    commands: 
+    - echo Logging in to Amazon ECR...
+    # update the following line with your own region and account ID (view the Push Commands in the console)
+    - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 417294578405.dkr.ecr.us-east-1.amazonaws.com
+  build: 
+    commands: 
+    - echo Build started on `date` 
+    - echo Building the Docker image... 
+    # update the following line with the name of your own ECR repository
+    - docker build -t igti-modulo3 . 
+    # update the following line with the URI of your own ECR repository (view the Push Commands in the console)
+    - docker tag igti-modulo3:latest 417294578405.dkr.ecr.us-east-1.amazonaws.com/igti-modulo3:latest 
+  post_build: 
+    commands: 
+    - echo Build completed on `date` 
+    - echo pushing to repo
+    # update the following line with the URI of your own ECR repository
+    - docker push 417294578405.dkr.ecr.us-east-1.amazonaws.com/igti-modulo3:latest
+    # writing the imagedefinitions.json file    
+    - echo Writing image definitions file...
+    - printf '[{"name":"igti-modulo3","imageUri":"%s"}]' 417294578405.dkr.ecr.us-east-1.amazonaws.com/igti-modulo3:latest > imagedefinitions.json 
+artifacts:
+  files:
+    - imagedefinitions.json
